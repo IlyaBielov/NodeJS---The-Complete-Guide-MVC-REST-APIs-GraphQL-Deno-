@@ -1,0 +1,19 @@
+{
+  "name": "nodejs---the-complete-guide-mvc-rest-apis-graphql-deno-",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IlyaBielov/NodeJS---The-Complete-Guide-MVC-REST-APIs-GraphQL-Deno-.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IlyaBielov/NodeJS---The-Complete-Guide-MVC-REST-APIs-GraphQL-Deno-/issues"
+  },
+  "homepage": "https://github.com/IlyaBielov/NodeJS---The-Complete-Guide-MVC-REST-APIs-GraphQL-Deno-#readme",
+  "description": ""
+}
