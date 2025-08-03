@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon app.js",
+    "start-server": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,12 @@
     "url": "https://github.com/IlyaBielov/NodeJS---The-Complete-Guide-MVC-REST-APIs-GraphQL-Deno-/issues"
   },
   "homepage": "https://github.com/IlyaBielov/NodeJS---The-Complete-Guide-MVC-REST-APIs-GraphQL-Deno-#readme",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0"
+  }
 }
