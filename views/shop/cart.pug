@@ -1,1 +1,17 @@
 extends ../main-layout/main-layout
+
+block content
+    if products.length > 0
+        div.cart__item-list
+            h2 TotalPrice: #{totalPrice}
+
+            ul
+                each p in products
+                    li.cart__item
+                        h1 #{p.productData.title}
+                        h2 Quantity: #{p.qty}
+                        form(action="/cart-delete-item", method="POST")
+                            input(type="hidden", value=p.productData.id, name="productId")
+                            button.btn.danger(type="submit") Delete
+    else
+        h1 No Products in Cart!

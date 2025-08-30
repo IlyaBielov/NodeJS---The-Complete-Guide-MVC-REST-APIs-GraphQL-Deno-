@@ -1,1 +1,23 @@
 extends ../main-layout/main-layout
+
+block content
+    form.product-form.card(action=(editing ? "/admin/edit-product" : "/admin/add-product"), method="POST")
+        .form-control
+            label(for="title") Title
+            input(type="text", name="title", id="title", value=(editing ? product.title : ""))
+
+        .form-control
+            label(for="imageUrl") Image URL
+            input(type="text", name="imageUrl", id="imageUrl", value=(editing ? product.imageUrl : ""))
+
+        .form-control
+            label(for="price") Price
+            input(type="number", name="price", id="price", step="0.01", value=(editing ? product.price : ""))
+
+        .form-control
+            label(for="description") Description
+            textarea(name="description", id="description" rows=5)= editing ? product.description : ""
+
+        input(type="hidden", name="productId", value=editing ? product.id : "")
+        button(type="submit")= editing ? "Update Product" : "Add Product"
+

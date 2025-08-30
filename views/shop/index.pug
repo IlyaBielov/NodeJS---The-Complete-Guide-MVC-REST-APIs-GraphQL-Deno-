@@ -1,8 +1,5 @@
 extends ../main-layout/main-layout
 
-block styles
-    link(rel="stylesheet", href="/css/product.css")
-
 block content
     if products.length > 0
         .grid
@@ -19,6 +16,8 @@ block content
                         h2.product__price $#{product.price || 0}
                         p.product__description #{product.description}
                     .card__actions
-                        button.btn Add to Cart
+                        form(action="/cart", method="POST")
+                            button.btn(type="submit") Add to Cart
+                            input(type="hidden" name="productId" value=product.id)
     else
         h1 No Products Found!
