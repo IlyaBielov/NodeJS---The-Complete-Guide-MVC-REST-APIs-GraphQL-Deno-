@@ -49,9 +49,9 @@ main {
 }
 
 .product-form {
-    width: 20rem;
-    max-width: 90%;
+    width: 100%;
     margin: auto;
+    padding: 15px 30px;
 }
 
 .form-control {
@@ -59,28 +59,55 @@ main {
 }
 
 .form-control label,
-.form-control input {
+.form-control input,
+.form-control textarea {
     display: block;
     width: 100%;
+    color: #00695c;
 }
 
-.form-control input {
-    border: 1px solid #00695c;
+.form-control label {
+    color: #004941;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.form-control input,
+.form-control textarea {
+    border: 2px dashed #00695c;
+    outline: 0;
     font: inherit;
     border-radius: 2px;
 }
 
 button {
     font: inherit;
-    border: 1px solid #00695c;
+    font-weight: bold;
+    border: 2px solid #00695c;
     color: #00695c;
     background: white;
-    border-radius: 3px;
+    border-radius: 5px;
     cursor: pointer;
+    padding: 0.5rem 1rem;
 }
 
 button:hover,
 button:active {
+    background-color: #00695c;
+    color: white;
+}
+
+.link-btn {
+    text-decoration: none;
+    color: #00695c;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border: 2px solid #00695c;
+    border-radius: 5px;
+}
+
+.link-btn:hover,
+.link-btn:active {
     background-color: #00695c;
     color: white;
 }
@@ -92,12 +119,13 @@ button:active {
 .grid {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
     align-items: stretch;
+    gap: 2rem;
 }
 
 .card {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    max-width: 400px;
 }
 
 .card__header,
@@ -114,6 +142,8 @@ button:active {
 
 .card__image {
     width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
 }
 
 .card__image img {
@@ -121,6 +151,8 @@ button:active {
 }
 
 .card__actions {
+    display: flex;
+    justify-content: center;
     padding: 1rem;
     text-align: center;
 }
@@ -128,4 +160,96 @@ button:active {
 .card__actions button,
 .card__actions a {
     margin: 0 0.25rem;
+}
+
+/* Mobile Navigation Styles */
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 5;
+    display: none;
+}
+
+.mobile-nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 80%;
+    max-width: 400px;
+    height: 100vh;
+    background: white;
+    z-index: 10;
+    padding: 2rem 1rem 1rem 2rem;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-out;
+}
+
+.mobile-nav.open {
+    transform: translateX(0);
+}
+
+.mobile-nav__item-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+
+.mobile-nav__item {
+    margin: 1rem 0;
+    padding: 0;
+}
+
+.mobile-nav__item a {
+    text-decoration: none;
+    color: black;
+    font-size: 1.5rem;
+    padding: 0.5rem 2rem;
+    background: white;
+    border: 1px solid white;
+    border-radius: 3px;
+    display: block;
+}
+
+.mobile-nav__item a:hover,
+.mobile-nav__item a:active,
+.mobile-nav__item a.active {
+    background: #00695c;
+    color: white;
+    border-color: #00695c;
+}
+
+.menu-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    vertical-align: middle;
+    display: none;
+    padding: 5px;
+}
+
+.menu-toggle span {
+    display: block;
+    background: white;
+    height: 3px;
+    width: 38px;
+    margin: 6px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .main-header__nav {
+        display: none;
+    }
 }
