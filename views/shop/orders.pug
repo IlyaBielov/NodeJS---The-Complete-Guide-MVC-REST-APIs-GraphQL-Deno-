@@ -5,12 +5,11 @@ block content
         div.orders
             each order in orders
                 div.order
-                    h2 Order ##{order.id}
+                    h2 Order ##{order._id}
                     ul.order__items
-                        each product in order.products
+                        each item in order.items
                             li.order__item
-                                h3 #{product.title}
-                                p Quantity: #{product.orderItem.quantity}
-                                p Price: $#{product.price}
+                                h3 #{item.title}
+                                p Quantity: #{item.quantity}
     else
         h1 No Orders Found!

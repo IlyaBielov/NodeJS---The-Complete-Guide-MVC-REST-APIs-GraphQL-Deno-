@@ -18,6 +18,5 @@ block content
             label(for="description") Description
             textarea(name="description", id="description" rows=5)= editing ? product.description : ""
 
-        input(type="hidden", name="productId", value=editing ? product.id : "")
+        input(type="hidden", name="productId", value=editing ? product._id : "")
         button(type="submit")= editing ? "Update Product" : "Add Product"
-

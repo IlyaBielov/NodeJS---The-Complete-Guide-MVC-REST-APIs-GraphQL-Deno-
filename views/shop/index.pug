@@ -18,6 +18,6 @@ block content
                     .card__actions
                         form(action="/cart", method="POST")
                             button.btn(type="submit") Add to Cart
-                            input(type="hidden" name="productId" value=product.id)
+                            input(type="hidden" name="productId" value=product._id)
     else
         h1 No Products Found!
