@@ -6,10 +6,10 @@ block content
             ul
                 each p in products
                     li.cart__item
-                        h1 #{p.title}
+                        h1 #{p.productId.title}
                         h2 Quantity: #{p.quantity}
                         form(action="/cart-delete-item", method="POST")
-                            input(type="hidden", value=p._id, name="productId")
+                            input(type="hidden", value=p.productId._id, name="productId")
                             button.btn.danger(type="submit") Delete
 
             form(action="/create-order", method="POST")

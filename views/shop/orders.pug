@@ -7,9 +7,9 @@ block content
                 div.order
                     h2 Order ##{order._id}
                     ul.order__items
-                        each item in order.items
+                        each item in order.products
                             li.order__item
-                                h3 #{item.title}
+                                h3 #{item.product.title}
                                 p Quantity: #{item.quantity}
     else
         h1 No Orders Found!
