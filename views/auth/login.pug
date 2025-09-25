@@ -1,0 +1,21 @@
+extends ../main-layout/main-layout
+
+block content
+    .login-container
+        .login-form
+            h1.login-title Login
+            form(action="/login", method="POST")
+                .form-group
+                    label(for="email") Email
+                    input#email.form-control(type="email", name="email", placeholder="Enter your email", required)
+                
+                .form-group
+                    label(for="password") Password
+                    input#password.form-control(type="password", name="password", placeholder="Enter your password", required)
+                
+                .form-group
+                    button.btn.btn-primary(type="submit") Login
+                
+                .form-group
+                    p.signup-link Don't have an account? 
+                        a(href="/signup") Sign up here

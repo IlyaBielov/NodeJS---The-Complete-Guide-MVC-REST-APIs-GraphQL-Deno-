@@ -29,6 +29,7 @@ main {
     height: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .main-header__item-list {
@@ -36,6 +37,25 @@ main {
     margin: 0;
     padding: 0;
     display: flex;
+    align-items: center;
+}
+
+.main-header button {
+    font: inherit;
+    font-weight: bold;
+    background-color: #00695c;
+    color: white;
+
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+}
+
+.main-header button:hover,
+.main-header button:active {
+    border: 2px solid #00695c;
+    color: #00695c;
+    background: white;
 }
 
 .main-header__item {
@@ -387,6 +407,101 @@ button:active {
     font-size: 1rem;
 }
 
+/* Login Styles */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 72px);
+    padding: 2rem;
+    width: 100%;
+}
+
+.login-form {
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    border-radius: 5px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+}
+
+.login-title {
+    color: #00695c;
+    text-align: center;
+    margin: 0 0 2rem 0;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.login-form .form-group {
+    margin: 1.5rem 0;
+}
+
+.login-form .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.login-form label {
+    display: block;
+    color: #004941;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.login-form input {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #00695c;
+    border-radius: 3px;
+    font: inherit;
+    color: #00695c;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.login-form input:focus {
+    border-color: #004941;
+}
+
+.login-form .btn-primary {
+    width: 100%;
+    background-color: #00695c;
+    color: white;
+    border: 2px solid #00695c;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-form .btn-primary:hover,
+.login-form .btn-primary:active {
+    background-color: #004941;
+    border-color: #004941;
+}
+
+.signup-link {
+    text-align: center;
+    margin: 1rem 0 0 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.signup-link a {
+    color: #00695c;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-link a:hover {
+    color: #004941;
+    text-decoration: underline;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .menu-toggle {
@@ -406,5 +521,17 @@ button:active {
 
     .order__item h3 {
         min-width: auto;
+    }
+
+    .login-container {
+        padding: 1rem;
+    }
+
+    .login-form {
+        padding: 1.5rem;
+    }
+
+    .login-title {
+        font-size: 1.5rem;
     }
 }
