@@ -7,9 +7,8 @@ exports.getIndex = (req, res, next) => {
         .then((products) => {
             const pageTitle = 'Shop'
             const path = '/'
-            const isAuthenticated = req.session.isLoggedIn;
 
-            res.render('shop/index', { products, pageTitle, path, isAuthenticated })
+            res.render('shop/index', { products, pageTitle, path })
         })
         .catch((error) => console.log(error))
 }
@@ -19,9 +18,8 @@ exports.getProducts = (req, res, next) => {
         .then((products) => {
             const pageTitle = 'All Products'
             const path = '/products'
-            const isAuthenticated = req.session.isLoggedIn;
 
-            res.render('shop/product-list', { products, pageTitle, path, isAuthenticated })
+            res.render('shop/product-list', { products, pageTitle, path })
         })
         .catch((error) => console.log(error))
 }
@@ -33,9 +31,8 @@ exports.getProduct = (req, res, next) => {
         .then((product) => {
             const pageTitle = product.title
             const path = '/products'
-            const isAuthenticated = req.session.isLoggedIn;
 
-            res.render('shop/product-detail', { product, pageTitle, path, isAuthenticated });
+            res.render('shop/product-detail', { product, pageTitle, path });
         })
         .catch((error) => console.log(error))
 }
@@ -45,13 +42,11 @@ exports.getCart = (req, res, next) => {
         .populate('cart.items.productId')
         .then((user) => {
             const products = user.cart.items;
-            const isAuthenticated = req.session.isLoggedIn;
 
             res.render('shop/cart', {
                 pageTitle: 'Your Cart',
                 path: '/cart',
                 products,
-                isAuthenticated
             });
         })
         .catch((error) => console.log(error))
@@ -78,13 +73,11 @@ exports.postCartDeleteProduct = (req, res, next) => {
 exports.getOrders = (req, res, next) => {
     Order.find({ "user.userId": req.session.user._id })
         .then((orders) => {
-            const isAuthenticated = req.session.isLoggedIn;
 
             res.render('shop/orders', {
                 pageTitle: 'Your Orders',
                 path: '/orders',
                 orders,
-                isAuthenticated
             });
         })
 }
@@ -100,8 +93,8 @@ exports.postOrder = (req, res, next) => {
             const order = new Order({
                 products: products,
                 user: {
-                    name: req.session.user.name,
                     userId: req.session.user,
+                    email: req.session.user.email,
                 },
             });
 
@@ -116,11 +109,8 @@ exports.postOrder = (req, res, next) => {
 }
 
 exports.getCheckout = (req, res, next) => {
-    const isAuthenticated = req.session.isLoggedIn;
-
     res.render('shop/checkout', {
         pageTitle: 'Checkout',
         path: '/checkout',
-        isAuthenticated
     })
 }

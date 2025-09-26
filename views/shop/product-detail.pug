@@ -18,6 +18,7 @@ block content
                         form(action="/cart", method="POST")
                             button.btn(type="submit") Add to Cart
                             input(type="hidden" name="productId" value=product._id)
+                            input(type="hidden", name="_csrf", value=csrfToken)
                     a.link-btn(href="/products") Back to Products
     else
         h1 Product Not Found!

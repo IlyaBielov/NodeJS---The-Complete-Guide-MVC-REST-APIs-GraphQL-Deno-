@@ -19,13 +19,17 @@ block content
         .auth-content
             .login-container
                 .login-form
-                    h1.login-title Login
+                    h1.login-title Sign Up
 
                     if errorMessage
                         .alert.alert-danger=errorMessage
 
-                    form(action="/login", method="POST")
+                    form(action="/signup" method="POST")
                         input(type="hidden", name="_csrf", value=csrfToken)
+                        .form-group
+                            label(for="name") Full Name
+                            input#name.form-control(type="text", name="name", placeholder="Enter your full name", required)
+
                         .form-group
                             label(for="email") Email
                             input#email.form-control(type="email", name="email", placeholder="Enter your email", required)
@@ -35,8 +39,12 @@ block content
                             input#password.form-control(type="password", name="password", placeholder="Enter your password", required)
 
                         .form-group
-                            button.btn.btn-primary(type="submit") Login
+                            label(for="confirmPassword") Confirm Password
+                            input#confirmPassword.form-control(type="password", name="confirmPassword", placeholder="Confirm your password", required)
 
                         .form-group
-                            p.signup-link Don't have an account?
-                                a(href="/signup") Sign up here
+                            button.btn.btn-primary(type="submit") Sign Up
+
+                        .form-group
+                            p.signup-link Already have an account?
+                                a(href="/login") Login here

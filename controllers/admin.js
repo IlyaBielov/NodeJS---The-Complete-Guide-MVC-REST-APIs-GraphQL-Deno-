@@ -3,21 +3,19 @@ const Product = require("../models/product");
 exports.getProducts = (req, res, next) => {
     Product.find()
         .then((products) => {
-            const isAuthenticated = req.session.isLoggedIn;
             const pageTitle = 'Admin Products'
             const path = '/admin/products'
 
-            res.render('admin/products', { products, pageTitle, path, isAuthenticated })
+            res.render('admin/products', { products, pageTitle, path })
         })
         .catch((error) => console.log(error))
 }
 
 exports.getAddProduct = (req, res, next) => {
-    const isAuthenticated = req.session.isLoggedIn;
     const pageTitle = 'Add Product';
     const path = '/admin/add-product';
 
-    res.render('admin/edit-product', { pageTitle, path, isAuthenticated });
+    res.render('admin/edit-product', { pageTitle, path });
 }
 exports.postAddProduct = (req, res, next) => {
     const title = req.body.title;
@@ -41,7 +39,6 @@ exports.getEditProduct = (req, res, next) => {
 
     Product.findById(id)
         .then((product) => {
-            const isAuthenticated = req.session.isLoggedIn;
             const pageTitle = 'Edit Product'
             const path = '/admin/edit-product'
             const editing = editMode
@@ -49,7 +46,7 @@ exports.getEditProduct = (req, res, next) => {
             if (!product) {
                 return res.redirect('/');
             }
-            res.render('admin/edit-product', { pageTitle, path, editing, product, isAuthenticated })
+            res.render('admin/edit-product', { pageTitle, path, editing, product })
         })
         .catch((error) => console.log(error));
 
