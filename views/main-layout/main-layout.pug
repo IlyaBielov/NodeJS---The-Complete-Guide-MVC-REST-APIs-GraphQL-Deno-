@@ -50,9 +50,8 @@ html(lang="en")
                     if isAuthenticated
                         li.main-header__item
                             form(action="/logout", method="POST")
-                                .form-group
-                                    input(type="hidden", name="_csrf", value=csrfToken)
-                                    button(type="submit") Logout
+                                input(type="hidden", name="_csrf", value=csrfToken)
+                                button(type="submit") Logout
 
         nav.mobile-nav
             ul.mobile-nav__item-list
@@ -85,10 +84,12 @@ html(lang="en")
                 if isAuthenticated
                     li.main-header__item
                         form(action="/logout", method="POST")
-                            .form-group
-                                input(type="hidden", name="_csrf", value=csrfToken)
-                                button(type="submit") Logout
+                            input(type="hidden", name="_csrf", value=csrfToken)
+                            button(type="submit") Logout
 
         main
             block content
         script(src="/js/main.js")
+        script(src="/js/validation.js")
+        script(src="/js/auth-form-validator.js")
+        script(src="/js/product-form-validator.js")

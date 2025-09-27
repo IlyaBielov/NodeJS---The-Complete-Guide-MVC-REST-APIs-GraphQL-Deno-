@@ -24,15 +24,17 @@ block content
                     if errorMessage
                         .alert.alert-danger=errorMessage
 
-                    form(action="/login", method="POST")
+                    form(action="/login", method="POST", id="loginForm", novalidate="true")
                         input(type="hidden", name="_csrf", value=csrfToken)
                         .form-group
                             label(for="email") Email
                             input#email.form-control(type="email", name="email", placeholder="Enter your email", required)
+                            .invalid-feedback
 
                         .form-group
                             label(for="password") Password
-                            input#password.form-control(type="password", name="password", placeholder="Enter your password", required)
+                            input#password.form-control(type="password", name="password", placeholder="Enter your password", required, minlength="1")
+                            .invalid-feedback
 
                         .form-group
                             button.btn.btn-primary(type="submit") Login
@@ -40,3 +42,7 @@ block content
                         .form-group
                             p.signup-link Don't have an account?
                                 a(href="/signup") Sign up here
+
+                        .form-group
+                            p.signup-link
+                                a(href="/reset-password") Reset password

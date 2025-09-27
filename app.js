@@ -11,6 +11,7 @@ const rootDir = require('./utils/path');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
+const { sanitizeRequest, securityHeaders } = require('./middleware/sanitize');
 
 const errorController = require('./controllers/error');
 
@@ -26,7 +27,14 @@ const csrfProtection = csrf();
 app.set('view engine', 'pug');
 app.set('views', 'views');
 
+// Apply security headers first
+app.use(securityHeaders);
+
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// Apply sanitization after body parsing but before other middleware
+app.use(sanitizeRequest);
+
 app.use(express.static(path.join(rootDir, 'public')));
 app.use(session({
     secret: 'secret',

@@ -24,23 +24,27 @@ block content
                     if errorMessage
                         .alert.alert-danger=errorMessage
 
-                    form(action="/signup" method="POST")
+                    form(action="/signup" method="POST", novalidate="true", id="signupForm")
                         input(type="hidden", name="_csrf", value=csrfToken)
                         .form-group
                             label(for="name") Full Name
-                            input#name.form-control(type="text", name="name", placeholder="Enter your full name", required)
+                            input#name.form-control(type="text", name="name", placeholder="Enter your full name", required, minlength="2", maxlength="50")
+                            .invalid-feedback
 
                         .form-group
                             label(for="email") Email
                             input#email.form-control(type="email", name="email", placeholder="Enter your email", required)
+                            .invalid-feedback
 
                         .form-group
                             label(for="password") Password
-                            input#password.form-control(type="password", name="password", placeholder="Enter your password", required)
+                            input#password.form-control(type="password", name="password", placeholder="Enter your password", required, minlength="6", pattern="^[a-zA-Z0-9]+$")
+                            .invalid-feedback
 
                         .form-group
                             label(for="confirmPassword") Confirm Password
                             input#confirmPassword.form-control(type="password", name="confirmPassword", placeholder="Confirm your password", required)
+                            .invalid-feedback
 
                         .form-group
                             button.btn.btn-primary(type="submit") Sign Up

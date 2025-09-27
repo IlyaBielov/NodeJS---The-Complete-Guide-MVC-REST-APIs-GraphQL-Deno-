@@ -1,3 +1,4 @@
+const { validationResult } = require('express-validator');
 const Product = require('../models/product');
 const Order = require('../models/order');
 const User = require('../models/user');
@@ -25,16 +26,28 @@ exports.getProducts = (req, res, next) => {
 }
 
 exports.getProduct = (req, res, next) => {
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+        return res.redirect('/products');
+    }
+
     const id = req.params.productId;
 
     Product.findById(id)
         .then((product) => {
+            if (!product) {
+                return res.redirect('/products');
+            }
             const pageTitle = product.title
             const path = '/products'
 
             res.render('shop/product-detail', { product, pageTitle, path });
         })
-        .catch((error) => console.log(error))
+        .catch((error) => {
+            console.log(error);
+            res.redirect('/products');
+        })
 }
 
 exports.getCart = (req, res, next) => {
@@ -52,22 +65,43 @@ exports.getCart = (req, res, next) => {
         .catch((error) => console.log(error))
 }
 exports.postCart = (req, res, next) => {
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+        return res.redirect('/cart');
+    }
+
     const id = req.body.productId;
     Product.findById(id)
         .then((product) => {
+            if (!product) {
+                return res.redirect('/cart');
+            }
             return User.findById(req.session.user._id)
                 .then((user) => user.addToCart(product));
         })
         .then(() => res.redirect('/cart'))
-        .catch(error => console.log(error))
+        .catch(error => {
+            console.log(error);
+            res.redirect('/cart');
+        })
 }
 exports.postCartDeleteProduct = (req, res, next) => {
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+        return res.redirect('/cart');
+    }
+
     const id = req.body.productId;
 
     User.findById(req.session.user._id)
         .then((user) => user.removeFromCart(id))
         .then(() => res.redirect('/cart'))
-        .catch((error) => console.log(error))
+        .catch((error) => {
+            console.log(error);
+            res.redirect('/cart');
+        })
 }
 
 exports.getOrders = (req, res, next) => {

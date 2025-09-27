@@ -5,74 +5,39 @@ const Schema = mongoose.Schema;
 const productSchema = new Schema({
     title: {
         type: String,
-        required: true
+        required: [true, 'Product title is required'],
+        trim: true,
+        minlength: [3, 'Title must be at least 3 characters long'],
+        maxlength: [100, 'Title cannot exceed 100 characters']
     },
     price: {
         type: Number,
-        required: true,
+        required: [true, 'Product price is required'],
+        min: [0.01, 'Price must be greater than 0']
     },
     description: {
         type: String,
-        required: true,
+        required: [true, 'Product description is required'],
+        trim: true,
+        minlength: [10, 'Description must be at least 10 characters long'],
+        maxlength: [500, 'Description cannot exceed 500 characters']
     },
     imageUrl: {
         type: String,
-        required: true,
+        required: [true, 'Product image URL is required'],
+        trim: true,
+        validate: {
+            validator: function(v) {
+                return /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(v);
+            },
+            message: 'Please provide a valid image URL'
+        }
     },
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
+        required: [true, 'User ID is required']
     }
 });
 
 module.exports = mongoose.model('Product', productSchema);
-
-// class Product {
-//     constructor(title, imageUrl, description, price, id, userId) {
-//         this.title = title;
-//         this.imageUrl = imageUrl;
-//         this.description = description;
-//         this.price = price;
-//         if (id) this._id = new mongodb.ObjectId(id);
-//         this.userId = userId;
-//     }
-//
-//     save() {
-//         const db = getDb();
-//         let dbOp = null;
-//
-//         console.log(this._id)
-//
-//         if (this._id) {
-//             dbOp = db.collection('products').updateOne({ _id: this._id }, { $set: this })
-//         } else {
-//             dbOp = db.collection('products').insertOne(this)
-//         }
-//
-//         return dbOp.then(result => console.log(result))
-//             .catch((error) => console.log(error));
-//     }
-//
-//     static fetchAll() {
-//         const db = getDb();
-//         return db.collection('products').find().toArray()
-//             .then(products => products)
-//             .catch((error) => console.log(error));
-//     }
-//
-//     static findByPk(id) {
-//         const db = getDb();
-//         return db.collection('products').find({ _id: new mongodb.ObjectId(id) }).next()
-//             .then(product => product)
-//             .catch((error) => console.log(error));
-//     }
-//
-//     static deleteByPk(id) {
-//         const db = getDb();
-//         return db.collection('products').deleteOne({ _id: new mongodb.ObjectId(id) })
-//             .then(result => console.log(result))
-//             .catch((error) => console.log(error));
-//     }
-// }
-//
-// module.exports = Product;
