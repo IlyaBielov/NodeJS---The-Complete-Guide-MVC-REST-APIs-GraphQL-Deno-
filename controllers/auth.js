@@ -31,22 +31,22 @@ exports.postLogin = (req, res, next) => {
         .then((user) => {
             if (!user) {
                 req.flash('error', 'No user with that email');
-                return res.redirect('/login');
+                return res.status(404).redirect('/login');
             }
             return bcrypt.compare(password, user.password)
                 .then((result) => {
                     if (result) {
                         req.session.user = user;
                         req.session.isLoggedIn = true;
-                        return req.session.save(() => res.redirect('/'));
+                        return req.session.save(() => res.status(200).redirect('/'));
                     }
 
                     req.flash('error', 'Invalid email or password');
-                    res.redirect('/login');
+                    res.status(401).redirect('/login');
                 })
                 .catch(() => {
                     req.flash('error', 'An unexpected error occurred. Please try again.');
-                    return res.redirect('/login');
+                    return res.status(500).redirect('/login');
                 })
         })
         .catch(err => {
@@ -78,12 +78,10 @@ exports.postSignup = (req, res, next) => {
 
     if (password !== confirmPassword) {
         req.flash('error', 'Passwords do not match.');
-        return res.redirect('/signup');
+        return res.status(400).redirect('/signup');
     }
     bcrypt.hash(password, 12)
         .then((hashedPassword) => {
-            throw new Error('Test error');
-
             const user = new User({
                 name,
                 email,
@@ -104,7 +102,7 @@ exports.postSignup = (req, res, next) => {
             .catch(err => {
                 console.error('[auth] Failed to send welcome email:', err && err.message ? err.message : err);
             });
-            return res.redirect('/login');
+            return res.status(201).redirect('/login');
         })
         .catch(err => {
             const error = new Error(err);
@@ -115,7 +113,7 @@ exports.postSignup = (req, res, next) => {
 
 exports.postLogout = (req, res, next) => {
     req.session.destroy(() => {
-        res.redirect('/');
+        res.status(200).redirect('/');
     });
 }
 

@@ -9,7 +9,7 @@ exports.getIndex = (req, res, next) => {
             const pageTitle = 'Shop'
             const path = '/'
 
-            res.render('shop/index', { products, pageTitle, path })
+            res.status(200).render('shop/index', { products, pageTitle, path })
         })
         .catch((err) => {
             const error = new Error(err);
@@ -24,7 +24,7 @@ exports.getProducts = (req, res, next) => {
             const pageTitle = 'All Products'
             const path = '/products'
 
-            res.render('shop/product-list', { products, pageTitle, path })
+            res.status(200).render('shop/product-list', { products, pageTitle, path })
         })
         .catch((err) => {
             const error = new Error(err);
@@ -45,12 +45,12 @@ exports.getProduct = (req, res, next) => {
     Product.findById(id)
         .then((product) => {
             if (!product) {
-                return res.redirect('/products');
+                return res.status(404).redirect('/products');
             }
             const pageTitle = product.title
             const path = '/products'
 
-            res.render('shop/product-detail', { product, pageTitle, path });
+            res.status(200).render('shop/product-detail', { product, pageTitle, path });
         })
         .catch((err) => {
             const error = new Error(err);
@@ -65,12 +65,12 @@ exports.getCart = (req, res, next) => {
         .then((user) => {
             if (!user) {
                 req.flash('error', 'User not found');
-                return res.redirect('/products');
+                return res.status(404).redirect('/products');
             }
 
             const products = user.cart.items;
 
-            res.render('shop/cart', {
+            res.status(200).render('shop/cart', {
                 pageTitle: 'Your Cart',
                 path: '/cart',
                 products,
