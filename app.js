@@ -55,11 +55,18 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
-app.use(errorController.get404)
+app.use(errorController.get404);
+
+// Error handling middleware (must be last)
+app.use(errorController.get500);
 
 mongoose.connect(MONGODB_URI)
     .then(() => {
         console.log('Connected to MongoDB');
         app.listen(3000, () => console.log('Server is running on port 3000'));
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+        console.error('Failed to connect to MongoDB:', err);
+        console.error('Application will exit. Please check your database connection.');
+        process.exit(1);
+    });

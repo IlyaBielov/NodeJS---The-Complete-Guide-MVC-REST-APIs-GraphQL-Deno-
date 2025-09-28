@@ -11,7 +11,11 @@ exports.getIndex = (req, res, next) => {
 
             res.render('shop/index', { products, pageTitle, path })
         })
-        .catch((error) => console.log(error))
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
 }
 
 exports.getProducts = (req, res, next) => {
@@ -22,7 +26,11 @@ exports.getProducts = (req, res, next) => {
 
             res.render('shop/product-list', { products, pageTitle, path })
         })
-        .catch((error) => console.log(error))
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
 }
 
 exports.getProduct = (req, res, next) => {
@@ -44,9 +52,10 @@ exports.getProduct = (req, res, next) => {
 
             res.render('shop/product-detail', { product, pageTitle, path });
         })
-        .catch((error) => {
-            console.log(error);
-            res.redirect('/products');
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         })
 }
 
@@ -54,6 +63,11 @@ exports.getCart = (req, res, next) => {
     User.findById(req.session.user._id)
         .populate('cart.items.productId')
         .then((user) => {
+            if (!user) {
+                req.flash('error', 'User not found');
+                return res.redirect('/products');
+            }
+
             const products = user.cart.items;
 
             res.render('shop/cart', {
@@ -62,7 +76,11 @@ exports.getCart = (req, res, next) => {
                 products,
             });
         })
-        .catch((error) => console.log(error))
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
 }
 exports.postCart = (req, res, next) => {
     const errors = validationResult(req);
@@ -75,15 +93,24 @@ exports.postCart = (req, res, next) => {
     Product.findById(id)
         .then((product) => {
             if (!product) {
+                req.flash('error', 'Product not found');
                 return res.redirect('/cart');
             }
             return User.findById(req.session.user._id)
-                .then((user) => user.addToCart(product));
+                .then((user) => {
+                    if (!user) {
+                        req.flash('error', 'User not found');
+                        return res.redirect('/cart');
+                    }
+
+                    user.addToCart(product)
+                });
         })
         .then(() => res.redirect('/cart'))
-        .catch(error => {
-            console.log(error);
-            res.redirect('/cart');
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         })
 }
 exports.postCartDeleteProduct = (req, res, next) => {
@@ -96,11 +123,18 @@ exports.postCartDeleteProduct = (req, res, next) => {
     const id = req.body.productId;
 
     User.findById(req.session.user._id)
-        .then((user) => user.removeFromCart(id))
+        .then((user) => {
+            if (!user) {
+                req.flash('error', 'User not found');
+                return res.redirect('/cart');
+            }
+            user.removeFromCart(id)
+        })
         .then(() => res.redirect('/cart'))
-        .catch((error) => {
-            console.log(error);
-            res.redirect('/cart');
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         })
 }
 
@@ -114,11 +148,20 @@ exports.getOrders = (req, res, next) => {
                 orders,
             });
         })
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
 }
 exports.postOrder = (req, res, next) => {
     User.findById(req.session.user._id)
         .populate('cart.items.productId')
         .then((user) => {
+            if (!user) {
+                req.flash('error', 'User not found');
+                return res.redirect('/cart');
+            }
             const products = user.cart.items.map(item => ({
                 product: { ...item.productId._doc },
                 quantity: item.quantity,
@@ -134,12 +177,23 @@ exports.postOrder = (req, res, next) => {
 
             return order.save()
         })
-        .then(() => {
-            return User.findById(req.session.user._id);
+        .then(() => User.findById(req.session.user._id))
+        .then((user) => {
+            if (!user) {
+                req.flash('error', 'User not found');
+                return res.redirect('/cart');
+            }
+            return user.clearCart()
+                .then(() => {
+                    req.flash('success', 'Order placed successfully');
+                    res.redirect('/orders')
+                })
         })
-        .then((user) => user.clearCart())
-        .then(() => res.redirect('/orders'))
-        .catch((error) => console.log(error))
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
 }
 
 exports.getCheckout = (req, res, next) => {

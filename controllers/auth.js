@@ -44,13 +44,16 @@ exports.postLogin = (req, res, next) => {
                     req.flash('error', 'Invalid email or password');
                     res.redirect('/login');
                 })
-                .catch(err => {
-                    console.log(err)
+                .catch(() => {
                     req.flash('error', 'An unexpected error occurred. Please try again.');
                     return res.redirect('/login');
                 })
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
 };
 
 exports.getSignup = (req, res, next) => {
@@ -79,6 +82,8 @@ exports.postSignup = (req, res, next) => {
     }
     bcrypt.hash(password, 12)
         .then((hashedPassword) => {
+            throw new Error('Test error');
+
             const user = new User({
                 name,
                 email,
@@ -102,9 +107,9 @@ exports.postSignup = (req, res, next) => {
             return res.redirect('/login');
         })
         .catch(err => {
-            console.log(err);
-            req.flash('error', 'Failed to create account. Please try again later.');
-            return res.redirect('/signup');
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         });
 };
 
@@ -126,7 +131,6 @@ exports.getResetPassword = (req, res, next) => {
 exports.postResetPassword = (req, res, next) => {
     crypto.randomBytes(32, (err, buffer) => {
         if (err) {
-            console.log(err);
             req.flash('error', 'An unexpected error occurred. Please try again later.');
             return res.redirect('/reset-password');
         }
@@ -174,7 +178,11 @@ exports.postResetPassword = (req, res, next) => {
                         console.error('[auth] Failed to send welcome email:', err && err.message ? err.message : err);
                     });
             })
-            .catch((err) => console.log(err))
+            .catch((err) => {
+                const error = new Error(err);
+                error.httpStatusCode = 500;
+                return next(error);
+            })
     })
 }
 
@@ -198,9 +206,9 @@ exports.getNewPassword = (req, res, next) => {
             });
         })
         .catch(err => {
-            console.log(err);
-            req.flash('error', 'An unexpected error occurred. Please try again later.');
-            return res.redirect('/reset-password');
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         });
 };
 
@@ -240,8 +248,8 @@ exports.postNewPassword = (req, res, next) => {
             res.redirect('/login');
         })
         .catch(err => {
-            console.log(err);
-            req.flash('error', 'An unexpected error occurred. Please try again later.');
-            res.redirect('/reset-password');
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
         });
 };

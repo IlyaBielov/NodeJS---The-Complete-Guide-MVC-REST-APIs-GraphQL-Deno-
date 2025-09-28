@@ -1,0 +1,15 @@
+extends main-layout/main-layout
+
+block content
+    .error-container
+        .error-content
+            .error-icon
+                | ⚠️
+            h1.error-title 500 - Server Error
+            p.error-message= errorMessage
+            .error-actions
+                a.btn.btn-primary(href="/") Back to Home
+                a.btn.btn-secondary(href="javascript:history.back()") Go Back
+        .error-details
+            p Something went wrong on our end. We're working to fix it!
+            p If this problem persists, please contact support.
