@@ -1,0 +1,81 @@
+:root {
+  /* Colors */
+  --primary-color: #00695c;
+  --primary-dark: #004941;
+  --secondary-color: #ffeb3b;
+  --danger-color: #dc3545;
+  --danger-dark: #c82333;
+  --danger-border: #bd2130;
+  --success-color: #28a745;
+  --white: #fff;
+  --black: #000;
+  --gray-light: #eee;
+  --gray-medium: #666;
+  --gray-dark: #6c757d;
+  
+  /* Alert colors */
+  --alert-danger-bg: #f8d7da;
+  --alert-danger-border: #f5c6cb;
+  --alert-danger-text: #721c24;
+  --alert-success-bg: #d4edda;
+  --alert-success-border: #c3e6cb;
+  --alert-success-text: #155724;
+  
+  /* Validation colors */
+  --valid-color: #28a745;
+  --invalid-color: #dc3545;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 2.5rem;
+  
+  /* Font sizes */
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.1rem;
+  --font-size-xl: 1.2rem;
+  --font-size-xxl: 1.3rem;
+  --font-size-xxxl: 1.5rem;
+  --font-size-huge: 2rem;
+  
+  /* Border radius */
+  --border-radius-sm: 2px;
+  --border-radius-base: 3px;
+  --border-radius-md: 4px;
+  --border-radius-lg: 5px;
+  --border-radius-xl: 8px;
+  
+  /* Shadows */
+  --box-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.26);
+  --box-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --box-shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --focus-shadow: 0 0 0 0.2rem rgba(0, 105, 92, 0.25);
+  --valid-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+  --invalid-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+  
+  /* Header */
+  --header-height: 3.5rem;
+  --mobile-nav-width: 80%;
+  --mobile-nav-max-width: 400px;
+  
+  /* Layout */
+  --main-padding: 1rem;
+  --card-max-width: 400px;
+  --card-detail-max-width: 800px;
+  --form-max-width: 600px;
+  --login-form-max-width: 400px;
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease-in-out;
+  --transition-medium: 0.3s ease;
+  --transition-slow: 0.3s ease-out;
+  
+  /* Z-index */
+  --z-backdrop: 5;
+  --z-mobile-nav: 10;
+  --z-auth-content: 1;
+}
