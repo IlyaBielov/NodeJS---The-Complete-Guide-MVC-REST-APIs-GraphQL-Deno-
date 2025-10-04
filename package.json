@@ -4,7 +4,7 @@
   "main": "app/app.js",
   "scripts": {
     "start": "nodemon app/app.js",
-    "start-server": "node app/app.js"
+    "start-server": "node app/app.js --trace-deprecation"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^5.0.0",
     "csurf": "^1.11.0",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "express-validator": "^7.2.1",

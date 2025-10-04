@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require("path");
 const bodyParser = require('body-parser');
@@ -16,7 +17,7 @@ const { sanitizeRequest, securityHeaders } = require('./middleware/sanitize');
 
 const errorController = require('./controllers/error');
 
-const MONGODB_URI = 'mongodb+srv://ilya-node-js_db_user:8NUfILivrAERNbsV@cluster0.0cnarzr.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0'
+const MONGODB_URI = process.env.MONGODB_URI
 
 const app = express();
 const store = new MongoDBStore({
@@ -27,7 +28,7 @@ const csrfProtection = csrf();
 
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, './app/images');
+        cb(null, process.env.UPLOAD_PATH || './app/images');
     },
     filename: (req, file, cb) => {
         cb(null, `${Date.now()}-${file.originalname}`);
@@ -58,7 +59,7 @@ app.use(express.static(path.join(rootDir, 'public')));
 app.use('/images', express.static(path.join(rootDir, 'images')));
 
 app.use(session({
-    secret: 'secret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: store
@@ -84,7 +85,8 @@ app.use(errorController.get500);
 mongoose.connect(MONGODB_URI)
     .then(() => {
         console.log('Connected to MongoDB');
-        app.listen(3000, () => console.log('Server is running on port 3000'));
+        const PORT = process.env.PORT || 3000;
+        app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
     })
     .catch((err) => {
         console.error('Failed to connect to MongoDB:', err);

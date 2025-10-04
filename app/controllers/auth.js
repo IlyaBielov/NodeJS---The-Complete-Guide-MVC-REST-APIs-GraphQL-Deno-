@@ -3,8 +3,7 @@ const sg = require('@sendgrid/mail');
 const crypto = require('crypto');
 const { validationResult } = require('express-validator');
 
-// Get from keys
-sg.setApiKey();
+sg.setApiKey(process.env.SENDGRID_API_KEY);
 
 const User = require('../models/user');
 
@@ -94,10 +93,10 @@ exports.postSignup = (req, res, next) => {
         .then(() => {
             sg.send({
                 to: email,
-                from: { email: 'ilyabielov@gmail.com', name: 'Node Shop' } ,
-                subject: 'Welcome to Node Shop',
-                text: 'Thank you for signing up to Node Shop. You can now log in and start shopping.',
-                html: '<h1>Thank you for signing up to Node Shop. You can now log in and start shopping.</h1>'
+                from: { email: process.env.SENDGRID_FROM_EMAIL, name: process.env.SENDGRID_FROM_NAME } ,
+                subject: `Welcome to ${process.env.APP_NAME}`,
+                text: `Thank you for signing up to ${process.env.APP_NAME}. You can now log in and start shopping.`,
+                html: `<h1>Thank you for signing up to ${process.env.APP_NAME}. You can now log in and start shopping.</h1>`
             })
             .catch(err => {
                 console.error('[auth] Failed to send welcome email:', err && err.message ? err.message : err);
