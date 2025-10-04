@@ -1,7 +1,7 @@
 extends ../main-layout/main-layout
 
 block content
-    form.product-form.card(action=(editing ? "/admin/edit-product" : "/admin/add-product"), method="POST", id="productForm", novalidate="true")
+    form.product-form(action=(editing ? "/admin/edit-product" : "/admin/add-product"), method="POST", id="productForm", novalidate="true")
         .form-group
             label(for="title") Title
             input.form-control(type="text", name="title", id="title", value=(editing ? product.title : ""), required, minlength="3", maxlength="100")
