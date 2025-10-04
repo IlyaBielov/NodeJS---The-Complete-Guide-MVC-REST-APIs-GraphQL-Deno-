@@ -1,0 +1,183 @@
+const { validationResult } = require('express-validator');
+const Product = require("../models/product");
+const fileHelper = require('../utils/fileHelper');
+
+exports.getProducts = (req, res, next) => {
+    Product.find({ userId: req.session.user._id })
+        .then((products) => {
+            const pageTitle = 'Admin Products'
+            const path = '/admin/products'
+
+            res.status(200).render('admin/products', { products, pageTitle, path })
+        })
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
+}
+
+exports.getAddProduct = (req, res, next) => {
+    const pageTitle = 'Add Product';
+    const path = '/admin/add-product';
+
+    res.status(200).render('admin/edit-product', { pageTitle, path });
+}
+exports.postAddProduct = (req, res, next) => {
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+        return res.status(422).render('admin/edit-product', {
+            pageTitle: 'Add Product',
+            path: '/admin/add-product',
+            errorMessage: errors.array()[0].msg,
+            product: {
+                title: req.body.title,
+                description: req.body.description,
+                price: req.body.price
+            }
+        });
+    }
+
+    const title = req.body.title;
+    const image = req.file;
+
+    if (!image) {
+        return res.status(422).render('admin/edit-product', {
+            pageTitle: 'Add Product',
+            path: '/admin/add-product',
+            errorMessage: 'Attached file is not an image. Please attach an image file.',
+            product: {
+                title: req.body.title,
+                description: req.body.description,
+                price: req.body.price
+            }
+        });
+    }
+
+    const description = req.body.description;
+    const price = req.body.price;
+    const imageUrl = image.path.replace('app/', '');
+
+    const product = new Product({ title, price, description, imageUrl, userId: req.session.user });
+
+    product.save()
+        .then(() => res.status(201).redirect('/admin/products'))
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
+}
+
+exports.getEditProduct = (req, res, next) => {
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+        return res.redirect('/admin/products');
+    }
+
+    const editMode = req.query.edit;
+    if (!editMode) {
+        return res.redirect('/');
+    }
+    const id = req.params.productId;
+
+    Product.findById(id)
+        .then((product) => {
+            const pageTitle = 'Edit Product'
+            const path = '/admin/edit-product'
+            const editing = editMode
+
+            if (!product) {
+                return res.status(404).redirect('/');
+            }
+            res.status(200).render('admin/edit-product', { pageTitle, path, editing, product })
+        })
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
+
+}
+exports.postEditProduct = (req, res, next) => {
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+        return res.status(422).render('admin/edit-product', {
+            pageTitle: 'Edit Product',
+            path: '/admin/edit-product',
+            editing: true,
+            errorMessage: errors.array()[0].msg,
+            product: {
+                _id: req.body.productId,
+                title: req.body.title,
+                description: req.body.description,
+                price: req.body.price
+            }
+        });
+    }
+
+    const prodId = req.body.productId;
+    const updatedTitle = req.body.title;
+    const image = req.file;
+    const updatedDescription = req.body.description;
+    const updatedPrice = req.body.price;
+
+    Product.findById(prodId)
+        .then(product => {
+            if (!product) {
+                return res.status(404).redirect('/admin/products');
+            }
+            if (product.userId.toString() !== req.session.user._id.toString()) {
+                return res.status(403).redirect('/admin/products');
+            }
+
+            product.title = updatedTitle;
+
+            if (image) {
+                product.imageUrl = image.path.replace('app/', '');
+            }
+
+            product.description = updatedDescription;
+            product.price = updatedPrice;
+
+            return product.save()
+                .then(() => res.status(200).redirect('/admin/products'));
+        })
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
+}
+
+exports.postDeleteProduct = (req, res, next) => {
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+        return res.redirect('/admin/products');
+    }
+
+    const id = req.body.productId;
+
+    Product.findById(id)
+        .then(product => {
+            if (!product) {
+                return res.status(404).redirect('/admin/products');
+            }
+
+            if (product.userId.toString() !== req.session.user._id.toString()) {
+                return res.status(403).redirect('/admin/products');
+            }
+            fileHelper.deleteFile(`app/${product.imageUrl}`);
+            return Product.deleteOne({ _id: id, userId: req.session.user._id })
+        })
+        .then(() => res.status(204).redirect('/admin/products'))
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
+}

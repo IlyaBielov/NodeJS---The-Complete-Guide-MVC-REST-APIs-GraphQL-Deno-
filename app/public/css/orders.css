@@ -1,0 +1,132 @@
+/* Order Styles */
+.orders {
+    max-width: var(--card-detail-max-width);
+    margin: var(--spacing-xl) auto;
+}
+
+.order {
+    background: var(--white);
+    box-shadow: var(--box-shadow-sm);
+    margin-bottom: var(--spacing-xl);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+}
+
+.order__header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: var(--spacing-md) var(--spacing-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.order h2 {
+    margin: 0;
+    font-size: var(--font-size-xxl);
+    font-weight: bold;
+    color: var(--white);
+}
+
+.order__items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.order__item {
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-bottom: 1px solid var(--gray-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.order__item:last-child {
+    border-bottom: none;
+}
+
+.order__item h3 {
+    color: var(--primary-color);
+    margin: 0 0 var(--spacing-sm) 0;
+    font-size: var(--font-size-xl);
+    flex: 1;
+    min-width: 200px;
+}
+
+.order__item p {
+    margin: var(--spacing-xs) 0;
+    color: var(--gray-medium);
+    font-size: 0.9rem;
+}
+
+.order__item .order__item-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.order__item .order__item-price {
+    font-weight: bold;
+    color: var(--primary-dark);
+    font-size: var(--font-size-base);
+}
+
+/* Download Invoice Button Styles */
+.download-invoice-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background-color: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all var(--transition-fast);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    white-space: nowrap;
+}
+
+.download-invoice-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: var(--white);
+    text-decoration: none;
+}
+
+.download-invoice-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.download-icon {
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+.download-text {
+    font-weight: inherit;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .order__header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+    
+    .download-invoice-btn {
+        align-self: flex-end;
+        font-size: 0.85rem;
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+}
