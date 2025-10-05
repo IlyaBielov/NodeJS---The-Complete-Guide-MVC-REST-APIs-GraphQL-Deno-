@@ -1,0 +1,20 @@
+extends ../main-layout/main-layout
+
+block content
+    div.checkout-cancel__container
+        div.checkout-cancel__content
+            div.checkout-cancel__icon
+                span.cancel-cross ✕
+            
+            h1.checkout-cancel__title Payment Cancelled
+            
+            p.checkout-cancel__message 
+                | Your payment has been cancelled. No charges have been made to your account.
+            
+            p.checkout-cancel__details
+                | Your items are still in your cart. You can complete your purchase at any time
+                | or continue browsing our products.
+            
+            div.checkout-cancel__actions
+                a.btn.success(href="/cart") Return to Cart
+                a.btn.secondary(href="/products") Continue Shopping

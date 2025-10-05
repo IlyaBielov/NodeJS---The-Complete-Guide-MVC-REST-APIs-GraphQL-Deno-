@@ -13,8 +13,6 @@ block content
                             input(type="hidden", name="_csrf", value=csrfToken)
                             button.btn.danger(type="submit") Delete
 
-            form(action="/create-order", method="POST")
-                input(type="hidden", name="_csrf", value=csrfToken)
-                button.btn.danger(type="submit") Order Now!
+            a.btn.success(href="/checkout") Proceed to Checkout
     else
         h1 No Products in Cart!

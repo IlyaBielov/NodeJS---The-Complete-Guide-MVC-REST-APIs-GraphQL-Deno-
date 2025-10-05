@@ -1,0 +1,20 @@
+extends ../main-layout/main-layout
+
+block content
+    div.checkout-success__container
+        div.checkout-success__content
+            div.checkout-success__icon
+                span.success-checkmark ✓
+            
+            h1.checkout-success__title Payment Successful!
+            
+            p.checkout-success__message 
+                | Thank you for your purchase! Your payment has been processed successfully.
+            
+            p.checkout-success__details
+                | You will receive an email confirmation shortly with your order details.
+                | You can also view your order history in your account.
+            
+            div.checkout-success__actions
+                a.btn.success(href="/orders") View Your Orders
+                a.btn.secondary(href="/products") Continue Shopping

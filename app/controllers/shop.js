@@ -4,6 +4,7 @@ const Order = require('../models/order');
 const User = require('../models/user');
 const path = require("node:path");
 const pdfMaker = require('../utils/pdfMaker');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const ITEMS_PER_PAGE = 2;
 
@@ -223,7 +224,7 @@ exports.postOrder = (req, res, next) => {
             const order = new Order({
                 products: products,
                 user: {
-                    userId: req.session.user,
+                    userId: req.session.user._id,
                     email: req.session.user.email,
                 },
             });
@@ -288,8 +289,116 @@ exports.getInvoice = (req, res, next) => {
 }
 
 exports.getCheckout = (req, res, next) => {
-    res.render('shop/checkout', {
-        pageTitle: 'Checkout',
-        path: '/checkout',
-    })
+    let totalAmount = 0;
+    let products = [];
+
+    User.findById(req.session.user._id)
+        .populate('cart.items.productId')
+        .then((user) => {
+            if (!user) {
+                req.flash('error', 'User not found');
+                return res.status(404).redirect('/cart');
+            }
+
+            products = user.cart.items;
+
+            // Check if cart is empty
+            if (products.length === 0) {
+                req.flash('error', 'Your cart is empty. Add items to proceed with checkout.');
+                return res.redirect('/cart');
+            }
+
+            // Calculate total amount
+            products.forEach(item => {
+                totalAmount += item.quantity * item.productId.price;
+            });
+
+            return stripe.checkout.sessions.create({
+                mode: 'payment',
+                payment_method_types: ['card'],
+                line_items: products.map(item => ({
+                    price_data: {
+                        currency: 'usd',
+                        product_data: {
+                            name: item.productId.title,
+                            description: item.productId.description,
+                        },
+                        unit_amount: item.productId.price * 100,
+                    },
+                    quantity: item.quantity,
+                })),
+                success_url: req.protocol + '://' + req.get('host') + '/checkout/success',
+                cancel_url: req.protocol + '://' + req.get('host') + '/checkout/cancel',
+            });
+        })
+        .then((session) => {
+            res.render('shop/checkout', {
+                pageTitle: 'Checkout',
+                path: '/checkout',
+                products: products,
+                totalAmount: totalAmount.toFixed(2),
+                sessionId: session.id,
+                stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY
+            });
+        })
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        })
+}
+
+exports.getCheckoutSuccess = (req, res, next) => {
+    User.findById(req.session.user._id)
+        .populate('cart.items.productId')
+        .then((user) => {
+            if (!user) {
+                req.flash('error', 'User not found');
+                return res.redirect('/cart');
+            }
+            
+            // Only create order if cart has items
+            if (user.cart.items.length === 0) {
+                // Cart is already empty, just show success page
+                return res.render('shop/checkout-success', {
+                    pageTitle: 'Payment Successful',
+                    path: '/checkout/success'
+                });
+            }
+            
+            const products = user.cart.items.map(item => ({
+                product: { ...item.productId._doc },
+                quantity: item.quantity,
+            }));
+
+            const order = new Order({
+                products: products,
+                user: {
+                    userId: req.session.user._id,
+                    email: req.session.user.email,
+                },
+            });
+
+            return order.save()
+                .then(() => user.clearCart())
+                .then(() => {
+                    req.flash('success', 'Order placed successfully');
+                    res.render('shop/checkout-success', {
+                        pageTitle: 'Payment Successful',
+                        path: '/checkout/success'
+                    });
+                });
+        })
+        .catch((err) => {
+            const error = new Error(err);
+            error.httpStatusCode = 500;
+            return next(error);
+        });
+}
+
+exports.getCheckoutCancel = (req, res, next) => {
+    res.render('shop/checkout-cancel', {
+        pageTitle: 'Payment Cancelled',
+        path: '/checkout/cancel'
+    });
 }

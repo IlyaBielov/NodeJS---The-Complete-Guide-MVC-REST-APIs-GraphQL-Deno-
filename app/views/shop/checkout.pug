@@ -1,1 +1,40 @@
 extends ../main-layout/main-layout
+
+block content
+    if products && products.length > 0
+        div.checkout__container
+            h1 Checkout - Order Summary
+            
+            div.checkout__items
+                h2 Your Items:
+                ul.checkout__item-list
+                    each product in products
+                        li.checkout__item
+                            div.checkout__item-info
+                                h3 #{product.productId.title}
+                                p.checkout__item-description #{product.productId.description}
+                                div.checkout__item-details
+                                    span.checkout__price $#{product.productId.price}
+                                    span.checkout__quantity x #{product.quantity}
+                                    span.checkout__subtotal = $#{(product.productId.price * product.quantity).toFixed(2)}
+            
+            div.checkout__total
+                h2 Total Amount: $#{totalAmount}
+            
+            div.checkout__actions
+                button.btn.success(
+                    type="button", 
+                    id="order-btn",
+                    data-stripe-publishable-key=stripePublishableKey,
+                    data-session-id=sessionId
+                ) Pay with Stripe
+
+                a.btn.secondary(href="/cart") Back to Cart
+    else
+        div.checkout__empty
+            h1 Your cart is empty!
+            p You need to add items to your cart before checkout.
+            a.btn(href="/products") Continue Shopping
+    
+    script(src="https://js.stripe.com/v3/")
+    script(src="/js/stripe-checkout.js")
