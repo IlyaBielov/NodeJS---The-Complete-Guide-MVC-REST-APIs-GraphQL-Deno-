@@ -1,19 +1,32 @@
 extends ../main-layout/main-layout
 
 block content
-    if orders.length > 0
-        div.orders
-            each order in orders
-                div.order
-                    div.order__header
-                        h2 Order ##{order._id}
-                        a.download-invoice-btn(href="/orders/" + order._id) 
-                            span.download-icon 📄
-                            span.download-text Download Invoice
-                    ul.order__items
-                        each item in order.products
-                            li.order__item
-                                h3 #{item.product.title}
-                                p Quantity: #{item.quantity}
-    else
-        h1 No Orders Found!
+    .content-wrapper
+        if orders.length > 0
+            div.orders
+                each order in orders
+                    div.order
+                        div.order__header
+                            h2 Order ##{order._id}
+                            a.download-invoice-btn(href="/orders/" + order._id) 
+                                span.download-icon 📄
+                                span.download-text Download Invoice
+                        ul.order__items
+                            each item in order.products
+                                li.order__item
+                                    h3 #{item.product.title}
+                                    p Quantity: #{item.quantity}
+            section.pagination
+                if hasPreviousPage
+                    a(href=`/orders?page=${previousPage}`) Previous
+                else
+                    a.disabled(href="#") Previous
+                - for (let i = 1; i <= lastPage; i++)
+                    a(href=`/orders?page=${i}`, class=(i === parseInt(currentPage) ? 'active' : '')) #{i}
+                if hasNextPage
+                    a(href=`/orders?page=${nextPage}`) Next
+                else
+                    a.disabled(href="#") Next
+        else
+            .no-products
+                h1 No Orders Found!

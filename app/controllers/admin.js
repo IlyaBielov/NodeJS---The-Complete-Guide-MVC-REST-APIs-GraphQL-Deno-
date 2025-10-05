@@ -2,13 +2,34 @@ const { validationResult } = require('express-validator');
 const Product = require("../models/product");
 const fileHelper = require('../utils/fileHelper');
 
-exports.getProducts = (req, res, next) => {
-    Product.find({ userId: req.session.user._id })
-        .then((products) => {
-            const pageTitle = 'Admin Products'
-            const path = '/admin/products'
+const ITEMS_PER_PAGE = 2;
 
-            res.status(200).render('admin/products', { products, pageTitle, path })
+exports.getProducts = (req, res, next) => {
+    const page = +req.query.page || 1;
+
+    Product.find({ userId: req.session.user._id })
+        .countDocuments()
+        .then((count) => {
+            return Product.find({ userId: req.session.user._id })
+                .skip(ITEMS_PER_PAGE * (page - 1))
+                .limit(ITEMS_PER_PAGE)
+                .then((products) => {
+                    const pageTitle = 'Admin Products'
+                    const path = '/admin/products'
+
+                    res.status(200).render('admin/products', {
+                        products,
+                        pageTitle,
+                        path,
+                        currentPage: page,
+                        totalProducts: count,
+                        hasNextPage: ITEMS_PER_PAGE * page < count,
+                        hasPreviousPage: page > 1,
+                        nextPage: page + 1,
+                        previousPage: page - 1,
+                        lastPage: Math.ceil(count / ITEMS_PER_PAGE)
+                    })
+                })
         })
         .catch((err) => {
             const error = new Error(err);

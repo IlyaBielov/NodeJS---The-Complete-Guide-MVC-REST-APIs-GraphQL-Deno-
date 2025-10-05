@@ -5,13 +5,31 @@ const User = require('../models/user');
 const path = require("node:path");
 const pdfMaker = require('../utils/pdfMaker');
 
-exports.getIndex = (req, res, next) => {
-    Product.find()
-        .then((products) => {
-            const pageTitle = 'Shop'
-            const path = '/'
+const ITEMS_PER_PAGE = 2;
 
-            res.status(200).render('shop/index', { products, pageTitle, path })
+exports.getIndex = (req, res, next) => {
+    const page = +req.query.page || 1;
+
+    Product.find()
+        .countDocuments()
+        .then((count) => {
+            return Product.find()
+                .skip(ITEMS_PER_PAGE * (page - 1))
+                .limit(ITEMS_PER_PAGE)
+                .then((products) => {
+                    res.status(200).render('shop/index', {
+                        products: products,
+                        pageTitle: 'Shop',
+                        path: '/',
+                        currentPage: page,
+                        totalProducts: count,
+                        hasNextPage: ITEMS_PER_PAGE * page < count,
+                        hasPreviousPage: page > 1,
+                        nextPage: page + 1,
+                        previousPage: page - 1,
+                        lastPage: Math.ceil(count / ITEMS_PER_PAGE)
+                    })
+                })
         })
         .catch((err) => {
             const error = new Error(err);
@@ -21,12 +39,31 @@ exports.getIndex = (req, res, next) => {
 }
 
 exports.getProducts = (req, res, next) => {
-    Product.find()
-        .then((products) => {
-            const pageTitle = 'All Products'
-            const path = '/products'
+    const page = +req.query.page || 1;
 
-            res.status(200).render('shop/product-list', { products, pageTitle, path })
+    Product.find()
+        .countDocuments()
+        .then((count) => {
+            return Product.find()
+                .skip(ITEMS_PER_PAGE * (page - 1))
+                .limit(ITEMS_PER_PAGE)
+                .then((products) => {
+                    const pageTitle = 'All Products'
+                    const path = '/products'
+
+                    res.status(200).render('shop/product-list', {
+                        products,
+                        pageTitle,
+                        path,
+                        currentPage: page,
+                        totalProducts: count,
+                        hasNextPage: ITEMS_PER_PAGE * page < count,
+                        hasPreviousPage: page > 1,
+                        nextPage: page + 1,
+                        previousPage: page - 1,
+                        lastPage: Math.ceil(count / ITEMS_PER_PAGE)
+                    })
+                })
         })
         .catch((err) => {
             const error = new Error(err);
@@ -141,14 +178,28 @@ exports.postCartDeleteProduct = (req, res, next) => {
 }
 
 exports.getOrders = (req, res, next) => {
-    Order.find({ "user.userId": req.session.user._id })
-        .then((orders) => {
+    const page = +req.query.page || 1;
 
-            res.render('shop/orders', {
-                pageTitle: 'Your Orders',
-                path: '/orders',
-                orders,
-            });
+    Order.find({ "user.userId": req.session.user._id })
+        .countDocuments()
+        .then((count) => {
+            return Order.find({ "user.userId": req.session.user._id })
+                .skip(ITEMS_PER_PAGE * (page - 1))
+                .limit(ITEMS_PER_PAGE)
+                .then((orders) => {
+                    res.render('shop/orders', {
+                        pageTitle: 'Your Orders',
+                        path: '/orders',
+                        orders,
+                        currentPage: page,
+                        totalProducts: count,
+                        hasNextPage: ITEMS_PER_PAGE * page < count,
+                        hasPreviousPage: page > 1,
+                        nextPage: page + 1,
+                        previousPage: page - 1,
+                        lastPage: Math.ceil(count / ITEMS_PER_PAGE)
+                    });
+                })
         })
         .catch((err) => {
             const error = new Error(err);

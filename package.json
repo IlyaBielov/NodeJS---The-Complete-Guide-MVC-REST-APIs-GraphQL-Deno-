@@ -4,7 +4,7 @@
   "main": "app/app.js",
   "scripts": {
     "start": "nodemon app/app.js",
-    "start-server": "node app/app.js --trace-deprecation"
+    "start-server": "node app/app.js"
   },
   "repository": {
     "type": "git",
