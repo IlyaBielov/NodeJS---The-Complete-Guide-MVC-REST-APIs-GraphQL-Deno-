@@ -174,31 +174,38 @@ exports.postEditProduct = (req, res, next) => {
         })
 }
 
-exports.postDeleteProduct = (req, res, next) => {
+exports.deleteProduct = (req, res, next) => {
     const errors = validationResult(req);
     
     if (!errors.isEmpty()) {
-        return res.redirect('/admin/products');
+        return res.status(422).json({ message: 'Validation failed' });
     }
 
-    const id = req.body.productId;
+    const id = req.params.productId;
 
     Product.findById(id)
         .then(product => {
             if (!product) {
-                return res.status(404).redirect('/admin/products');
+                return res.status(404).json({ message: 'Product not found' });
             }
 
             if (product.userId.toString() !== req.session.user._id.toString()) {
-                return res.status(403).redirect('/admin/products');
+                return res.status(403).json({ message: 'Unauthorized access' });
             }
+            
+            // Properly handle file deletion and product deletion in sequence
             fileHelper.deleteFile(`app/${product.imageUrl}`);
-            return Product.deleteOne({ _id: id, userId: req.session.user._id })
+            return Product.deleteOne({ _id: id, userId: req.session.user._id });
         })
-        .then(() => res.status(204).redirect('/admin/products'))
+        .then((result) => {
+            if (result && result.deletedCount > 0) {
+                res.status(200).json({ message: 'Product deleted successfully' });
+            } else {
+                res.status(404).json({ message: 'Product not found or not deleted' });
+            }
+        })
         .catch((err) => {
-            const error = new Error(err);
-            error.httpStatusCode = 500;
-            return next(error);
+            console.error('Error deleting product:', err);
+            res.status(500).json({ message: 'Error deleting product' });
         })
 }

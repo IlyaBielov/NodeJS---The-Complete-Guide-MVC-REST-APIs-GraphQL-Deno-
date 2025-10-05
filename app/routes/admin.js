@@ -26,10 +26,10 @@ router.post('/edit-product',
     adminController.postEditProduct
 );
 
-router.post('/delete-product', 
-    isAuth, 
-    validateProductIdBody(), 
-    adminController.postDeleteProduct
+router.delete('/product/:productId',
+    isAuth,
+    validateProductId(),
+    adminController.deleteProduct
 );
 
 module.exports = router;
